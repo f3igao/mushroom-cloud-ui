@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/mushroom-cloud-ui/static/css/main.7eb3ab83.chunk.css",
+    "main.js": "/mushroom-cloud-ui/static/js/main.80a823d4.chunk.js",
+    "main.js.map": "/mushroom-cloud-ui/static/js/main.80a823d4.chunk.js.map",
+    "runtime-main.js": "/mushroom-cloud-ui/static/js/runtime-main.b274b44a.js",
+    "runtime-main.js.map": "/mushroom-cloud-ui/static/js/runtime-main.b274b44a.js.map",
+    "static/js/2.a49ee6ed.chunk.js": "/mushroom-cloud-ui/static/js/2.a49ee6ed.chunk.js",
+    "static/js/2.a49ee6ed.chunk.js.map": "/mushroom-cloud-ui/static/js/2.a49ee6ed.chunk.js.map",
+    "static/js/3.bd2563ef.chunk.js": "/mushroom-cloud-ui/static/js/3.bd2563ef.chunk.js",
+    "static/js/3.bd2563ef.chunk.js.map": "/mushroom-cloud-ui/static/js/3.bd2563ef.chunk.js.map",
+    "index.html": "/mushroom-cloud-ui/index.html",
+    "static/css/main.7eb3ab83.chunk.css.map": "/mushroom-cloud-ui/static/css/main.7eb3ab83.chunk.css.map",
+    "static/js/2.a49ee6ed.chunk.js.LICENSE.txt": "/mushroom-cloud-ui/static/js/2.a49ee6ed.chunk.js.LICENSE.txt",
+    "static/media/algo_dark.325d1e4a.svg": "/mushroom-cloud-ui/static/media/algo_dark.325d1e4a.svg",
+    "static/media/logo.21e62254.svg": "/mushroom-cloud-ui/static/media/logo.21e62254.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b274b44a.js",
+    "static/js/2.a49ee6ed.chunk.js",
+    "static/css/main.7eb3ab83.chunk.css",
+    "static/js/main.80a823d4.chunk.js"
+  ]
+}
