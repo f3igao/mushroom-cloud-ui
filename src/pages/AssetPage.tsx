@@ -19,7 +19,7 @@ import {
   SButton,
   SIcon,
   SImage,
-  Status,
+  Status
 } from '../utils';
 
 interface AssetPageProps {
@@ -190,7 +190,6 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     // const imageSrc = data.properties.source_image.replace(IPFS, IPFS_DOMAIN);
     const imageSrc = data.image.replace(IPFS, IPFS_DOMAIN);
     this.setState({ description: data.description, imageSrc });
-    // this.setState({ imageSrc });
   };
 
   render() {
