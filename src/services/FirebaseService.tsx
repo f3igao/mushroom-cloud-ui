@@ -10,8 +10,9 @@ import {
   getFirestore,
   query,
   updateDoc,
-  where,
+  where
 } from 'firebase/firestore';
+import { FirebaseFields } from '../utils';
 import ChainService from './ChainService';
 
 const firebaseConfig = {
@@ -90,9 +91,9 @@ export default class FirebaseService {
     const ref = collection(firestore, 'asset_sale_contracts');
     const filter = query(
       ref,
-      where('seller', '==', address),
-      where('status', '==', 'active'),
-      where('is_main', '==', this.chainService.isMainNet)
+      where(FirebaseFields.Seller, '==', address),
+      where(FirebaseFields.Status, '==', 'active'),
+      where(FirebaseFields.IsMain, '==', this.chainService.isMainNet)
     );
     const snapshot = await getDocs(filter);
     return snapshot.docs;
