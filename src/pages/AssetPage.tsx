@@ -19,7 +19,7 @@ import {
   SButton,
   SIcon,
   SImage,
-  Status
+  Status,
 } from '../utils';
 
 interface AssetPageProps {
@@ -187,14 +187,16 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
   getAssetMetadata = async (url: any) => {
     const ipfsUrl = url.replace(IPFS, IPFS_DOMAIN);
     const data = await this.contractService.getAssetMetadataFromIpfs(ipfsUrl);
-    const imageSrc = data.properties.source_image.replace(IPFS, IPFS_DOMAIN);
+    // const imageSrc = data.properties.source_image.replace(IPFS, IPFS_DOMAIN);
+    const imageSrc = data.image.replace(IPFS, IPFS_DOMAIN);
     this.setState({ description: data.description, imageSrc });
+    // this.setState({ imageSrc });
   };
 
   render() {
     const assetInfo = this.state.assetInfo;
     const renderButtons = () => {
-      const isManager = assetInfo?.manager === this.props.address;
+      const isCreator = assetInfo?.creator === this.props.address;
       const hasContract = this.state.contract;
       const isSold = this.state.status === Status.Complete;
       if (isSold) {
@@ -206,7 +208,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
             </div>
           </SButton>
         );
-      } else if (isManager) {
+      } else if (isCreator) {
         return hasContract ? (
           <SButton disabled className='w-100'>
             <div className='flex justify-center'>
