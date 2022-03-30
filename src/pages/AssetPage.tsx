@@ -13,6 +13,7 @@ import TransactionService from '../services/TransactionService';
 import {
   FirebaseCollections,
   FirebaseFields,
+  formatMoney,
   IPFS,
   IPFS_DOMAIN,
   SAssetInfo,
@@ -202,7 +203,9 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
         return (
           <SButton disabled className='w-100'>
             <div className='flex justify-center'>
-              <span className='white'>Sold for {this.state.price}</span>
+              <span className='white'>
+                Sold for {formatMoney(this.state.price)}
+              </span>
               <SIcon src={algo_light} alt='algos' />
             </div>
           </SButton>
@@ -211,7 +214,9 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
         return hasContract ? (
           <SButton disabled className='w-100'>
             <div className='flex justify-center'>
-              <span className='white'>On Sale for {this.state.price}</span>
+              <span className='white'>
+                On Sale for {formatMoney(this.state.price)}
+              </span>
               <SIcon src={algo_light} alt='algos' />
             </div>
           </SButton>

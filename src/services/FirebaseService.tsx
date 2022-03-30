@@ -12,7 +12,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import { FirebaseFields } from '../utils';
+import { FirebaseCollections, FirebaseFields, Status } from '../utils';
 import ChainService from './ChainService';
 
 const firebaseConfig = {
@@ -72,11 +72,11 @@ export default class FirebaseService {
 
   getContractForAsset = async (index: number) => {
     const firestore = getFirestore();
-    const ref = collection(firestore, 'asset_sale_contracts');
+    const ref = collection(firestore, FirebaseCollections.AssetSaleContracts);
     const contracts = query(
       ref,
-      where('asset_index', '==', index),
-      where('status', '==', 'active')
+      where(FirebaseFields.AssetIndex, '==', index),
+      where(FirebaseFields.Status, '==', Status.Active)
     );
     const snapshot = await getDocs(contracts);
     if (snapshot.docs.length > 0 && snapshot.docs[0].exists()) {
@@ -88,11 +88,11 @@ export default class FirebaseService {
 
   getContractsForSeller = async (address: string) => {
     const firestore = getFirestore();
-    const ref = collection(firestore, 'asset_sale_contracts');
+    const ref = collection(firestore, FirebaseCollections.AssetSaleContracts);
     const filter = query(
       ref,
       where(FirebaseFields.Seller, '==', address),
-      where(FirebaseFields.Status, '==', 'active'),
+      where(FirebaseFields.Status, '==', Status.Active),
       where(FirebaseFields.IsMain, '==', this.chainService.isMainNet)
     );
     const snapshot = await getDocs(filter);
