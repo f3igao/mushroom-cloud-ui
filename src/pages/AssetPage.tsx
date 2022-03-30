@@ -19,7 +19,7 @@ import {
   SButton,
   SIcon,
   SImage,
-  Status
+  Status,
 } from '../utils';
 
 interface AssetPageProps {
@@ -234,30 +234,30 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
 
     return (
       assetInfo && (
-        <div className='pv5 ph6'>
+        <div className='pv5-ns ph6-ns pt4'>
           <p className='f3 b'>{assetInfo.name}</p>
-          <div className='flex justify-between'>
-            <div className='w-40'>
+          <div className='flex flex-row-ns flex-column justify-between'>
+            <div className='w-40-ns'>
               <SImage src={this.state.imageSrc} alt='nft' />
               <div className='mt3'>{renderButtons()}</div>
             </div>
-            <div className='w-50'>
+            <div className='w-50-ns mt0-ns mt4'>
               <SAssetInfo>
-                <span className='b mb1 color-accent'>owner</span>
+                <span className='b mb2 f6 light-red'>owner</span>
                 <span>{this.state.owner}</span>
               </SAssetInfo>
               {this.state.description && (
                 <SAssetInfo>
-                  <span className='b mb1 color-accent'>description</span>
+                  <span className='b mb2 f6 light-red'>description</span>
                   <span>{this.state.description}</span>
                 </SAssetInfo>
               )}
               <SAssetInfo>
-                <span className='b mb1 color-accent'>url</span>
+                <span className='b mb2 f6 light-red'>url</span>
                 <span>{assetInfo.url}</span>
               </SAssetInfo>
               <SAssetInfo>
-                <span className='b mb1 color-accent'>creator</span>
+                <span className='b mb2 f6 light-red'>creator</span>
                 <span>{assetInfo.creator}</span>
               </SAssetInfo>
             </div>

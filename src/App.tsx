@@ -116,7 +116,7 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     return (
-      <div>
+      <div className="code">
         <Header
           address={this.state.address}
           connector={this.state.connector}

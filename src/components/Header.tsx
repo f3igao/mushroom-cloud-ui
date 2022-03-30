@@ -23,15 +23,15 @@ const Header: FunctionComponent<HeaderProps> = ({
   const connectWallet = async () => connector.createSession();
 
   return (
-    <div className='flex items-start justify-between'>
+    <div className='flex items-center justify-between sans-serif'>
       <div className='flex items-center w-50'>
         <img src={logo} className='app-logo mr2' alt='logo' />
-        <span className='f4 b'>Mushroom Cloud NFT</span>
+        <span className='f4'>Mushroom Cloud NFT</span>
       </div>
       {address ? (
         <div className='flex flex-column tr'>
-          <SAddress className='b'>{ellipseAddress(address)}</SAddress>
-          <span className='pointer-fade' onClick={killSession}>
+          <SAddress>{ellipseAddress(address)}</SAddress>
+          <span className='pointer-fade f6' onClick={killSession}>
             Disconnect
           </span>
         </div>
