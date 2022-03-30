@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const SButton = styled.button`
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
+  border: none
 `;
 
 export const SImage = styled.img`

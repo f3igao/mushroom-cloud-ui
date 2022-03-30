@@ -24,9 +24,9 @@ const Header: FunctionComponent<HeaderProps> = ({
 
   return (
     <div className='flex items-start justify-between'>
-      <div className='flex items-center f4 b w-50'>
+      <div className='flex items-center w-50'>
         <img src={logo} className='app-logo mr2' alt='logo' />
-        Mushroom Cloud NFT
+        <span className='f4 b'>Mushroom Cloud NFT</span>
       </div>
       {address ? (
         <div className='flex flex-column tr'>
