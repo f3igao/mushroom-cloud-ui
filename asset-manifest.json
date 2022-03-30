@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/mushroom-cloud-ui/static/css/main.25bbbae2.chunk.css",
-    "main.js": "/mushroom-cloud-ui/static/js/main.c7ed9970.chunk.js",
-    "main.js.map": "/mushroom-cloud-ui/static/js/main.c7ed9970.chunk.js.map",
+    "main.css": "/mushroom-cloud-ui/static/css/main.cebf2976.chunk.css",
+    "main.js": "/mushroom-cloud-ui/static/js/main.25407da8.chunk.js",
+    "main.js.map": "/mushroom-cloud-ui/static/js/main.25407da8.chunk.js.map",
     "runtime-main.js": "/mushroom-cloud-ui/static/js/runtime-main.691aa7f1.js",
     "runtime-main.js.map": "/mushroom-cloud-ui/static/js/runtime-main.691aa7f1.js.map",
     "static/js/2.52e53c44.chunk.js": "/mushroom-cloud-ui/static/js/2.52e53c44.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.0443b968.chunk.js": "/mushroom-cloud-ui/static/js/3.0443b968.chunk.js",
     "static/js/3.0443b968.chunk.js.map": "/mushroom-cloud-ui/static/js/3.0443b968.chunk.js.map",
     "index.html": "/mushroom-cloud-ui/index.html",
-    "static/css/main.25bbbae2.chunk.css.map": "/mushroom-cloud-ui/static/css/main.25bbbae2.chunk.css.map",
+    "static/css/main.cebf2976.chunk.css.map": "/mushroom-cloud-ui/static/css/main.cebf2976.chunk.css.map",
     "static/js/2.52e53c44.chunk.js.LICENSE.txt": "/mushroom-cloud-ui/static/js/2.52e53c44.chunk.js.LICENSE.txt",
     "static/media/algo_dark.325d1e4a.svg": "/mushroom-cloud-ui/static/media/algo_dark.325d1e4a.svg",
     "static/media/algo_light.svg": "/mushroom-cloud-ui/static/media/algo_light.4f066c4c.svg",
@@ -19,7 +19,7 @@
   "entrypoints": [
     "static/js/runtime-main.691aa7f1.js",
     "static/js/2.52e53c44.chunk.js",
-    "static/css/main.25bbbae2.chunk.css",
-    "static/js/main.c7ed9970.chunk.js"
+    "static/css/main.cebf2976.chunk.css",
+    "static/js/main.25407da8.chunk.js"
   ]
 }
