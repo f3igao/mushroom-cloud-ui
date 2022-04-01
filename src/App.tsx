@@ -6,62 +6,70 @@ import './App.css';
 import Header from './components/Header';
 import AssetPage from './pages/AssetPage';
 import HomePage from './pages/HomePage';
+import ChainService from './services/ChainService';
+import FirebaseService from './services/FirebaseService';
 import WalletService from './services/WalletService';
 
 interface AppProps {}
 
 interface AppState {
   connector: WalletConnect;
-  fetching: boolean;
+  firebaseService: FirebaseService;
+  chainService: ChainService;
+  address: string;
   connected: boolean;
   accounts: string[];
-  address: string;
+  fetching: boolean;
 }
 
 const INITIAL_STATE: AppState = {
   connector: new WalletService().connector,
-  fetching: false,
+  firebaseService: new FirebaseService(),
+  chainService: new ChainService(),
+  address: '',
   connected: false,
   accounts: [],
-  address: '',
+  fetching: false,
 };
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
-    const { connector } = INITIAL_STATE;
-    const { connected, accounts } = connector;
+    const { connected, accounts } = INITIAL_STATE.connector;
     this.state = {
       ...INITIAL_STATE,
       connected,
       accounts,
       address: accounts[0],
     };
-  }
-
-  componentDidMount() {
     this.subscribeToWalletEvents();
+    this.setupFirebase();
   }
 
-  subscribeToWalletEvents = () => {
+  setupFirebase = async () => {
+    await this.state.firebaseService.setup({ account: this.state.address });
+  };
+
+  subscribeToWalletEvents = async () => {
     const connector = this.state.connector;
     if (!connector) return;
     connector.on('connect', (error: Error | null, payload: any) => {
-      console.log(`connector.on("connect")`);
+      window.location.reload();
+      console.log(`connector.on('connect')`);
       if (error) throw error;
       this.onConnect(payload);
     });
     connector.on(
       'session_update',
       async (error: Error | null, payload: any) => {
-        console.log(`connector.on("session_update")`);
+        console.log(`connector.on('session_update')`);
         if (error) throw error;
         const accounts = payload.params[0].accounts;
         this.onSessionUpdate(accounts);
       }
     );
     connector.on('disconnect', (error: Error | null, payload: any) => {
-      console.log(`connector.on("disconnect")`);
+      console.log(`connector.on('disconnect')`);
       if (error) throw error;
       this.onDisconnect();
     });
@@ -101,11 +109,12 @@ class App extends React.Component<AppProps, AppState> {
   //   try {
   //     // get account balances
   //     const assets = await apiGetAccountAssets(chain, address);
-  //     this.setState({ fetching: false, address, assets });
+  //     this.setState({ assets });
   //   } catch (error) {
-  //     console.error(error);
   //     this.setState({ fetching: false });
+  //     throw error;
   //   }
+  //   this.setState({ fetching: false });
   // };
 
   killSession = () => {
@@ -115,11 +124,12 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
+    const { connector, firebaseService, chainService, address } = this.state;
     return (
-      <div className="code">
+      <div className='code'>
         <Header
-          address={this.state.address}
-          connector={this.state.connector}
+          address={address}
+          connector={connector}
           killSession={this.killSession}
         ></Header>
         <BrowserRouter basename={process.env.PUBLIC_URL}>
@@ -129,8 +139,10 @@ class App extends React.Component<AppProps, AppState> {
               path='/asset/:index'
               element={
                 <AssetPage
-                  address={this.state.address}
-                  connector={this.state.connector}
+                  chainService={chainService}
+                  firebaseService={firebaseService}
+                  address={address}
+                  connector={connector}
                 />
               }
             />

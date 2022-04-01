@@ -10,7 +10,7 @@ export default class WalletService {
     qrcodeModal: QRCodeModal,
   });
 
-  sign = async (txns: any) => {
+  sign = async (txns: any): Promise<Uint8Array[]> => {
     const txnsToSign = txns.map((txn: any) => {
       const encodedTxn = Buffer.from(
         algosdk.encodeUnsignedTransaction(txn)

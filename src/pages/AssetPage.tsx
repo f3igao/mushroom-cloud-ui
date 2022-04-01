@@ -3,6 +3,7 @@ import WalletConnect from '@walletconnect/client';
 import { LogicSigAccount } from 'algosdk';
 import React from 'react';
 import { useParams } from 'react-router';
+import { CompletionTriggerKind } from 'typescript';
 import algo_light from '../assets/algo_light.svg';
 import BuyButton from '../components/BuyButton';
 import SellForm from '../components/SellForm';
@@ -25,6 +26,8 @@ import {
 
 interface AssetPageProps {
   connector: WalletConnect;
+  firebaseService: FirebaseService;
+  chainService: ChainService;
   address: string;
   assetIndex: number;
 }
@@ -55,40 +58,34 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
   constructor(props: AssetPageProps) {
     super(props);
     this.state = { ...INITIAL_STATE };
+    this.setAsset(this.props.assetIndex);
   }
 
-  firebaseService = new FirebaseService();
   contractService = new ContractService();
   transactionService = new TransactionService();
-  chainService = new ChainService();
 
-  componentDidMount() {
-    this.firebaseService.setup({ account: this.props.address });
-    this.setAsset(this.props.assetIndex);
-    console.log('mainnet:', this.chainService.isMainNet);
-  }
-
-  setAsset = async (index: number) => {
+  setAsset = async (index: number): Promise<void> => {
+    const { chainService, firebaseService } = this.props;
     this.setState({ fetching: true });
-    this.chainService.indexer
+    chainService.indexer
       .lookupAssetByID(index)
       .do()
       .then((response) => {
         const assetInfo = response.asset.params;
         this.setState({ assetInfo, fetching: false });
-        this.getAssetMetadata(assetInfo.url);
+        this.setAssetMetadata(assetInfo.url);
       })
       .catch((error: Error) => {
         console.error(error);
       });
-    this.chainService.indexer
+    chainService.indexer
       .lookupAssetBalances(index)
       .do()
       .then((response) => {
         const ownerInfo = response.balances.find((item: any) => item.amount);
         this.setState({ owner: ownerInfo.address });
       });
-    this.firebaseService.getContractForAsset(index).then((response) => {
+    firebaseService.getContractForAsset(index).then((response) => {
       this.setState({
         contract: response,
         price: response?.data()[FirebaseFields.Price],
@@ -97,8 +94,13 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     });
   };
 
-  sellAsset = async (price: number) => {
-    const { address: seller, assetIndex } = this.props;
+  sellAsset = async (price: number): Promise<void> => {
+    const {
+      address: seller,
+      assetIndex,
+      firebaseService,
+      chainService,
+    } = this.props;
 
     if (seller && price) {
       this.setState({ fetching: true });
@@ -109,7 +111,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
           price
         );
         const contractResult = contract.result;
-        const response = await this.firebaseService.addDocument(
+        const response = await firebaseService.addDocument(
           FirebaseCollections.AssetSaleContracts,
           {
             seller,
@@ -117,7 +119,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
             price,
             contract_result: contractResult,
             status: Status.Pending,
-            is_main: this.chainService.isMainNet,
+            is_main: chainService.isMainNet,
             created_on: serverTimestamp(),
           }
         );
@@ -127,7 +129,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
           assetIndex,
           contractResult,
         });
-        this.firebaseService.updateDocument(
+        firebaseService.updateDocument(
           FirebaseCollections.AssetSaleContracts,
           response.id,
           {
@@ -143,21 +145,18 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     }
   };
 
-  buyAsset = async () => {
-    if (!this.props.address) {
-      this.props.connector.createSession();
+  buyAsset = async (): Promise<void> => {
+    const { connector, address: buyer, assetIndex } = this.props;
+    if (!buyer) {
+      connector.createSession();
       return;
     }
-    const contractResult =
-      this.state.contract.data()[FirebaseFields.ContractResult];
-    const contract = new Uint8Array(Buffer.from(contractResult, 'base64'));
-    const contractSig = new LogicSigAccount(contract);
-    const buyer = this.props.address;
+
+    const contractSig = await this.getContractSig();
     const seller = this.state.contract.data()[FirebaseFields.Seller];
-    const assetIndex = this.props.assetIndex;
     const price = this.state.contract.data()[FirebaseFields.Price];
 
-    if (buyer && seller && contractSig && assetIndex && price) {
+    if (contractSig && seller && price) {
       this.setState({ fetching: true });
       try {
         // confirm transaction
@@ -168,7 +167,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
           price,
           contractSig,
         });
-        this.firebaseService.updateDocument(
+        this.props.firebaseService.updateDocument(
           FirebaseCollections.AssetSaleContracts,
           this.state.contract.id,
           {
@@ -177,7 +176,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
             buyer,
           }
         );
-        this.setState({ status: Status.Complete, contract: null });
+        this.setState({ contract: null, status: Status.Complete });
       } catch (error) {
         throw error;
       }
@@ -185,7 +184,14 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     }
   };
 
-  getAssetMetadata = async (url: any) => {
+  getContractSig = async (): Promise<LogicSigAccount> => {
+    const contractResult =
+      this.state.contract.data()[FirebaseFields.ContractResult];
+    const contract = new Uint8Array(Buffer.from(contractResult, 'base64'));
+    return new LogicSigAccount(contract);
+  };
+
+  setAssetMetadata = async (url: any): Promise<void> => {
     const ipfsUrl = url.replace(IPFS, IPFS_DOMAIN);
     const data = await this.contractService.getAssetMetadataFromIpfs(ipfsUrl);
     // const imageSrc = data.properties.source_image.replace(IPFS, IPFS_DOMAIN);
@@ -195,7 +201,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
 
   render() {
     const assetInfo = this.state.assetInfo;
-    const renderButtons = () => {
+    const renderButton = () => {
       const isCreator = assetInfo?.creator === this.props.address;
       const hasContract = this.state.contract;
       const isSold = this.state.status === Status.Complete;
@@ -226,6 +232,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
       } else {
         return hasContract ? (
           <BuyButton
+            address={this.props.address}
             price={this.state.price}
             buyAsset={this.buyAsset}
           ></BuyButton>
@@ -244,7 +251,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
           <div className='flex flex-row-ns flex-column justify-between'>
             <div className='w-40-ns'>
               <SImage src={this.state.imageSrc} alt='nft' />
-              <div className='mt3'>{renderButtons()}</div>
+              <div className='mt3'>{renderButton()}</div>
             </div>
             <div className='w-50-ns mt0-ns mt4'>
               <SAssetInfo>

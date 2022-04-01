@@ -1,15 +1,16 @@
-import algosdk from 'algosdk';
+import { Algodv2, Indexer } from 'algosdk';
 import {
   ALGOD_HOST_MAIN,
   ALGOD_HOST_TEST,
   INDEXER_HOST_MAIN,
-  INDEXER_HOST_TEST, NodeEnv
+  INDEXER_HOST_TEST,
+  NodeEnv,
 } from '../utils';
 
 export default class ChainService {
-  isMainNet = process.env.NODE_ENV === NodeEnv.Production;
-  algodHost = this.isMainNet ? ALGOD_HOST_MAIN : ALGOD_HOST_TEST;
-  algod = new algosdk.Algodv2('', this.algodHost, '');
-  indexerHost = this.isMainNet ? INDEXER_HOST_MAIN : INDEXER_HOST_TEST;
-  indexer = new algosdk.Indexer('', this.indexerHost, '');
+  isMainNet: boolean = process.env.NODE_ENV === NodeEnv.Production;
+  algodHost: string = this.isMainNet ? ALGOD_HOST_MAIN : ALGOD_HOST_TEST;
+  algod: Algodv2 = new Algodv2('', this.algodHost, '');
+  indexerHost: string = this.isMainNet ? INDEXER_HOST_MAIN : INDEXER_HOST_TEST;
+  indexer: Indexer = new Indexer('', this.indexerHost, '');
 }

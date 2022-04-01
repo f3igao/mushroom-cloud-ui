@@ -5,12 +5,15 @@ import {
   collection,
   deleteDoc,
   doc,
+  DocumentData,
+  DocumentSnapshot,
   getDoc,
   getDocs,
   getFirestore,
   query,
+  QueryDocumentSnapshot,
   updateDoc,
-  where
+  where,
 } from 'firebase/firestore';
 import { FirebaseCollections, FirebaseFields, Status } from '../utils';
 import ChainService from './ChainService';
@@ -28,7 +31,7 @@ export default class FirebaseService {
   currentAccountData = {};
   chainService = new ChainService();
 
-  setup = async ({ account }: any) => {
+  setup = async ({ account }: any): Promise<void> => {
     initializeApp(firebaseConfig);
     getAnalytics();
     if (account) {
@@ -41,14 +44,20 @@ export default class FirebaseService {
     }
   };
 
-  addDocument = async (collectionName: string, data: any) => {
+  addDocument = async (
+    collectionName: string,
+    data: any
+  ): Promise<DocumentSnapshot<any>> => {
     const firestore = getFirestore();
     const ref = collection(firestore, collectionName);
     const response = await addDoc(ref, data);
     return await getDoc(response);
   };
 
-  getDocument = async (collectionName: string, docIndex: string) => {
+  getDocument = async (
+    collectionName: string,
+    docIndex: string
+  ): Promise<DocumentSnapshot<DocumentData>> => {
     const firestore = getFirestore();
     const ref = doc(firestore, collectionName, docIndex);
     return await getDoc(ref);
@@ -58,19 +67,24 @@ export default class FirebaseService {
     collectionName: string,
     docIndex: string,
     data: any
-  ) => {
+  ): Promise<void> => {
     const firestore = getFirestore();
     const ref = doc(firestore, collectionName, docIndex);
     await updateDoc(ref, data);
   };
 
-  deleteDocument = async (collectionName: string, docIndex: string) => {
+  deleteDocument = async (
+    collectionName: string,
+    docIndex: string
+  ): Promise<void> => {
     const firestore = getFirestore();
     const ref = doc(firestore, collectionName, docIndex);
     return await deleteDoc(ref);
   };
 
-  getContractForAsset = async (index: number) => {
+  getContractForAsset = async (
+    index: number
+  ): Promise<QueryDocumentSnapshot<DocumentData> | null> => {
     const firestore = getFirestore();
     const ref = collection(firestore, FirebaseCollections.AssetSaleContracts);
     const contracts = query(
@@ -86,7 +100,9 @@ export default class FirebaseService {
     }
   };
 
-  getContractsForSeller = async (address: string) => {
+  getContractsForSeller = async (
+    address: string
+  ): Promise<QueryDocumentSnapshot<DocumentData>[]> => {
     const firestore = getFirestore();
     const ref = collection(firestore, FirebaseCollections.AssetSaleContracts);
     const filter = query(

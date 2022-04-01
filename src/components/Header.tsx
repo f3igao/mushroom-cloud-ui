@@ -36,7 +36,7 @@ const Header: FunctionComponent<HeaderProps> = ({
           </span>
         </div>
       ) : (
-        <SButton className='pointer-fade' onClick={connectWallet}>
+        <SButton onClick={connectWallet}>
           Connect Wallet
         </SButton>
       )}

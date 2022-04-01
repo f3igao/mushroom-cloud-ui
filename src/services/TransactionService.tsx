@@ -6,7 +6,9 @@ export default class TransactionService {
   algod = new ChainService().algod;
   walletService = new WalletService();
 
-  sendAndConfirm = async (signedTxns: Uint8Array[]) => {
+  sendAndConfirm = async (
+    signedTxns: Uint8Array[]
+  ): Promise<Record<string, any>> => {
     try {
       const sentTxns = await this.algod.sendRawTransaction(signedTxns).do();
       console.log('sentTxns', sentTxns);
@@ -15,14 +17,17 @@ export default class TransactionService {
         sentTxns.txId,
         4
       );
-      console.log('success', confirmedTxns);
       return confirmedTxns;
     } catch (error) {
       throw error;
     }
   };
 
-  sellAsset = async ({ seller, assetIndex, contractResult }: any) => {
+  sellAsset = async ({
+    seller,
+    assetIndex,
+    contractResult,
+  }: any): Promise<Record<string, any>> => {
     try {
       const contractEncoded = new Uint8Array(
         Buffer.from(contractResult, 'base64')
@@ -70,7 +75,13 @@ export default class TransactionService {
     }
   };
 
-  buyAsset = async ({ buyer, seller, assetIndex, price, contractSig }: any) => {
+  buyAsset = async ({
+    buyer,
+    seller,
+    assetIndex,
+    price,
+    contractSig,
+  }: any): Promise<Record<string, any>> => {
     try {
       const suggestedParams = await this.algod.getTransactionParams().do();
       // pay seller
@@ -123,7 +134,6 @@ export default class TransactionService {
         group[3],
         contractSig
       ).blob;
-
       return await this.sendAndConfirm(signedTxns);
     } catch (error) {
       throw error;
