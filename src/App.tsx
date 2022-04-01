@@ -44,6 +44,7 @@ class App extends React.Component<AppProps, AppState> {
     };
     this.subscribeToWalletEvents();
     this.setupFirebase();
+    console.log('on mainnet:', this.state.chainService.isMainNet);
   }
 
   setupFirebase = async () => {
