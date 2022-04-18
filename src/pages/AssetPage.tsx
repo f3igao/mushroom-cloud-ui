@@ -3,7 +3,6 @@ import WalletConnect from '@walletconnect/client';
 import { LogicSigAccount } from 'algosdk';
 import React from 'react';
 import { useParams } from 'react-router';
-import { CompletionTriggerKind } from 'typescript';
 import algo_light from '../assets/algo_light.svg';
 import BuyButton from '../components/BuyButton';
 import SellForm from '../components/SellForm';
@@ -39,6 +38,7 @@ interface AssetPageState {
   owner: string;
   assetInfo: any;
   imageSrc: string;
+  externalUrl: string;
   description: string;
   status: Status | null;
 }
@@ -50,6 +50,7 @@ const INITIAL_STATE: AssetPageState = {
   owner: '',
   assetInfo: null,
   imageSrc: '',
+  externalUrl: '',
   description: '',
   status: null,
 };
@@ -196,7 +197,11 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     const data = await this.contractService.getAssetMetadataFromIpfs(ipfsUrl);
     // const imageSrc = data.properties.source_image.replace(IPFS, IPFS_DOMAIN);
     const imageSrc = data.image.replace(IPFS, IPFS_DOMAIN);
-    this.setState({ description: data.description, imageSrc });
+    this.setState({
+      description: data.description,
+      imageSrc,
+      externalUrl: data.external_url,
+    });
   };
 
   render() {
@@ -207,23 +212,23 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
       const isSold = this.state.status === Status.Complete;
       if (isSold) {
         return (
-          <SButton disabled className='w-100'>
-            <div className='flex justify-center'>
-              <span className='white'>
+          <SButton disabled className="w-100">
+            <div className="flex justify-center">
+              <span className="white">
                 Sold for {formatMoney(this.state.price)}
               </span>
-              <SIcon src={algo_light} alt='algos' />
+              <SIcon src={algo_light} alt="algos" />
             </div>
           </SButton>
         );
       } else if (isCreator) {
         return hasContract ? (
-          <SButton disabled className='w-100'>
-            <div className='flex justify-center'>
-              <span className='white'>
+          <SButton disabled className="w-100">
+            <div className="flex justify-center">
+              <span className="white">
                 On Sale for {formatMoney(this.state.price)}
               </span>
-              <SIcon src={algo_light} alt='algos' />
+              <SIcon src={algo_light} alt="algos" />
             </div>
           </SButton>
         ) : (
@@ -237,7 +242,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
             buyAsset={this.buyAsset}
           ></BuyButton>
         ) : (
-          <SButton disabled className='w-100'>
+          <SButton disabled className="w-100">
             Not on Sale
           </SButton>
         );
@@ -246,30 +251,34 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
 
     return (
       assetInfo && (
-        <div className='pv5-ns ph6-ns pt4'>
-          <p className='f3 b'>{assetInfo.name}</p>
-          <div className='flex flex-row-ns flex-column justify-between'>
-            <div className='w-40-ns'>
-              <SImage src={this.state.imageSrc} alt='nft' />
-              <div className='mt3'>{renderButton()}</div>
+        <div className="pv5-ns ph6-ns pt4">
+          <p className="f3 b">{assetInfo.name}</p>
+          <div className="flex flex-row-ns flex-column justify-between">
+            <div className="w-40-ns">
+              <SImage src={this.state.imageSrc} alt="nft" />
+              <div className="mt3">{renderButton()}</div>
             </div>
-            <div className='w-50-ns mt0-ns mt4'>
+            <div className="w-50-ns mt0-ns mt4">
               <SAssetInfo>
-                <span className='b mb2 f6 light-red'>owner</span>
+                <span className="b mb2 f6 light-red">owner</span>
                 <span>{this.state.owner}</span>
               </SAssetInfo>
               {this.state.description && (
                 <SAssetInfo>
-                  <span className='b mb2 f6 light-red'>description</span>
+                  <span className="b mb2 f6 light-red">description</span>
                   <span>{this.state.description}</span>
                 </SAssetInfo>
               )}
               <SAssetInfo>
-                <span className='b mb2 f6 light-red'>url</span>
+                <span className="b mb2 f6 light-red">url</span>
                 <span>{assetInfo.url}</span>
               </SAssetInfo>
               <SAssetInfo>
-                <span className='b mb2 f6 light-red'>creator</span>
+                <span className="b mb2 f6 light-red">link to artwork</span>
+                <a href={this.state.externalUrl} target="_blank" className='light-blue'>{this.state.externalUrl}</a>
+              </SAssetInfo>
+              <SAssetInfo>
+                <span className="b mb2 f6 light-red">creator</span>
                 <span>{assetInfo.creator}</span>
               </SAssetInfo>
             </div>
