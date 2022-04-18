@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/mushroom-cloud-ui/static/css/main.991b1385.chunk.css",
-    "main.js": "/mushroom-cloud-ui/static/js/main.95916ec3.chunk.js",
-    "main.js.map": "/mushroom-cloud-ui/static/js/main.95916ec3.chunk.js.map",
+    "main.js": "/mushroom-cloud-ui/static/js/main.5293e174.chunk.js",
+    "main.js.map": "/mushroom-cloud-ui/static/js/main.5293e174.chunk.js.map",
     "runtime-main.js": "/mushroom-cloud-ui/static/js/runtime-main.9e908747.js",
     "runtime-main.js.map": "/mushroom-cloud-ui/static/js/runtime-main.9e908747.js.map",
     "static/js/2.dcc15a0c.chunk.js": "/mushroom-cloud-ui/static/js/2.dcc15a0c.chunk.js",
@@ -20,6 +20,6 @@
     "static/js/runtime-main.9e908747.js",
     "static/js/2.dcc15a0c.chunk.js",
     "static/css/main.991b1385.chunk.css",
-    "static/js/main.95916ec3.chunk.js"
+    "static/js/main.5293e174.chunk.js"
   ]
 }
