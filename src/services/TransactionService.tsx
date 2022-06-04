@@ -119,7 +119,7 @@ export default class TransactionService {
       // pay collaborator
       const txn4 = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
         from: buyer,
-        to: process.env.REACT_APP_COLLABORATOR_ADDRESS ?? '',
+        to: process.env.REACT_APP_COLLAB_ADDRESS ?? '',
         amount: price * 1e6 * 0.1,
         suggestedParams,
       });
