@@ -7,6 +7,7 @@ export enum Status {
   Pending = 'pending',
   Active = 'active',
   Complete = 'complete',
+  Cancelled = 'cancelled',
 }
 
 export enum FirebaseFields {

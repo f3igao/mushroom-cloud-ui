@@ -6,8 +6,12 @@ export const SButton = styled.button`
   border: none;
   cursor: pointer;
 
-  &:hover {
+  &:hover&:!disabled {
     opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: unset;
   }
 `;
 

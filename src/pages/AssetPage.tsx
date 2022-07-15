@@ -146,6 +146,17 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
     }
   };
 
+  cancelAssetSale = async (): Promise<void> => {
+    const {
+      address: seller,
+      assetIndex,
+      firebaseService,
+      chainService,
+    } = this.props;
+
+    // TODO: add cancel asset sale logic
+  };
+
   buyAsset = async (): Promise<void> => {
     const { connector, address: buyer, assetIndex } = this.props;
     if (!buyer) {
@@ -223,14 +234,19 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
         );
       } else if (isCreator) {
         return hasContract ? (
-          <SButton disabled className="w-100">
-            <div className="flex justify-center">
-              <span className="white">
-                On Sale for {formatMoney(this.state.price)}
-              </span>
-              <SIcon src={algo_light} alt="algos" />
-            </div>
-          </SButton>
+          <div className="flex flex-column">
+            <SButton disabled className="w-100 mb2">
+              <div className="flex justify-center">
+                <span className="white">
+                  On Sale for {formatMoney(this.state.price)}
+                </span>
+                <SIcon src={algo_light} alt="algos" />
+              </div>
+            </SButton>
+            <SButton className="w-100" onClick={this.cancelAssetSale}>
+              Cancel
+            </SButton>
+          </div>
         ) : (
           <SellForm sellAsset={this.sellAsset} />
         );
@@ -240,7 +256,7 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
             address={this.props.address}
             price={this.state.price}
             buyAsset={this.buyAsset}
-          ></BuyButton>
+          />
         ) : (
           <SButton disabled className="w-100">
             Not on Sale
@@ -275,7 +291,13 @@ class AssetPage extends React.Component<AssetPageProps, AssetPageState> {
               </SAssetInfo>
               <SAssetInfo>
                 <span className="b mb2 f6 light-red">link to artwork</span>
-                <a href={this.state.externalUrl} target="_blank" className='light-blue'>{this.state.externalUrl}</a>
+                <a
+                  href={this.state.externalUrl}
+                  target="_blank"
+                  className="light-blue"
+                >
+                  {this.state.externalUrl}
+                </a>
               </SAssetInfo>
               <SAssetInfo>
                 <span className="b mb2 f6 light-red">creator</span>

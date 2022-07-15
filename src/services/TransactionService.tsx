@@ -139,4 +139,57 @@ export default class TransactionService {
       throw error;
     }
   };
+
+  cancelAssetSale = async ({ contract }: any) => {
+    try {
+      const contractEncoded = new Uint8Array(
+        Buffer.from(contract['result'], 'base64')
+      );
+      const contractSig = new algosdk.LogicSigAccount(contractEncoded);
+      const suggestedParams = await this.algod.getTransactionParams().do();
+
+      // opt in seller
+      // const tx0 = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+      //   from: contract["seller"],
+      //   to: contract["seller"],
+      //   amount: 0,
+      //   assetIndex: contract["asset"],
+      //   suggestedParams,
+      // });
+      // close asset to seller
+      const tx1 = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+        from: contract['hash'],
+        to: contract['seller'],
+        assetIndex: contract['asset'],
+        amount: 1,
+        closeRemainderTo: contract['seller'],
+        suggestedParams,
+      });
+      // close remainder to seller
+      const tx2 = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+        from: contract['hash'],
+        to: contract['seller'],
+        amount: 0,
+        closeRemainderTo: contract['seller'],
+        suggestedParams,
+      });
+      // group
+      const group = algosdk.assignGroupID([tx1, tx2]);
+      // const signedTxns = await WalletClient.sign(group);
+      let signedTxns = [];
+      signedTxns[0] = algosdk.signLogicSigTransactionObject(
+        group[0],
+        contractSig
+      ).blob;
+      signedTxns[1] = algosdk.signLogicSigTransactionObject(
+        group[1],
+        contractSig
+      ).blob;
+      const confirmedTxns = await this.sendAndConfirm(signedTxns);
+
+      return confirmedTxns;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
